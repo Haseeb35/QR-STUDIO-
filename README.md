@@ -1,6 +1,44 @@
 # QR Studio
 
-Generate QR codes for URLs, text, Wi-Fi details, contacts and more. Runs entirely in the browser, works offline, and nothing is uploaded.
+Make a QR code in under a minute: for a website, WhatsApp, your Wi-Fi, a contact card, an event and more. Every code is tested to make sure phones can read it. It runs entirely in your browser, works offline, and nothing you type is uploaded.
+
+**[Open the live app →](https://haseeb35.github.io/QR-STUDIO-/)**
+
+![QR Studio home page with a 3D exploded QR code and an animated QR background](docs/screenshots/hero.png)
+
+## A quick tour
+
+### Create a code in four steps
+
+Pick what to share, fill in a few boxes, choose a look and download. The preview explains in plain words what happens when someone scans the code, and a built-in scanner confirms that phones can read it.
+
+![Wi-Fi QR code being created, with the Ocean design and the message "Tested: phones can read this code"](docs/screenshots/generator-wifi.png)
+
+### WhatsApp and social links from just a username
+
+Choose WhatsApp, Instagram, Facebook, YouTube, TikTok, LinkedIn or X, type a username or phone number, and the right link is built for you. WhatsApp codes can include a ready-made message.
+
+![WhatsApp chat QR code with a ready-made message and the Sunset design](docs/screenshots/whatsapp.png)
+
+### A printable Wi-Fi sign for guests
+
+Turn a Wi-Fi code into a tidy card with the network name and password, ready for a café table, reception desk or fridge.
+
+<p align="center">
+  <img src="docs/screenshots/wifi-sign.png" alt="Printable Wi-Fi sign reading Free Wi-Fi, with a QR code, network name and password" width="360">
+</p>
+
+### Check a QR code before you open it
+
+Some QR codes lead to scam websites. Upload or scan a code to see where it really goes. Suspicious links get a clear warning, and nothing opens unless you choose to.
+
+![QR checker warning "Don't open this" for a disguised PayPal link](docs/screenshots/checker.png)
+
+### Works on your phone
+
+<p align="center">
+  <img src="docs/screenshots/mobile.png" alt="QR Studio on a phone, showing a Wi-Fi code and the Download step" width="300">
+</p>
 
 ## Features
 
@@ -17,7 +55,7 @@ Generate QR codes for URLs, text, Wi-Fi details, contacts and more. Runs entirel
 | Phone | `tel:` |
 | Event | iCalendar `VEVENT` (times stored in UTC) |
 | Location | Google Maps link or `geo:` URI, with "use my location" |
-| UPI | `upi://pay` payment link |
+| Payment (UPI) | `upi://pay` payment link |
 
 **Design**
 
@@ -67,7 +105,7 @@ Drop, paste or scan (camera) any QR code to see what it contains before opening 
 
 See [SECURITY.md](SECURITY.md) for how to report a vulnerability.
 
-**After pushing to GitHub,** turn these on under **Settings → Code security**: private vulnerability reporting, Dependabot alerts and secret scanning. Then add a branch protection rule for `main` that requires the *Integrity* and *CodeQL* checks to pass.
+**If you fork this project,** turn these on under **Settings → Code security**: private vulnerability reporting, Dependabot alerts and secret scanning. Then add a branch protection rule for `main` that requires the *Integrity* and *CodeQL* checks to pass.
 
 ## Run locally
 
@@ -104,6 +142,7 @@ vendor/               qrcode-generator, jsQR, JSZip (bundled for offline use)
 fonts/                Instrument Sans, JetBrains Mono (SIL Open Font License)
 SHA256SUMS            Hashes of every bundled third-party file
 SECURITY.md           Vulnerability reporting and security design
+docs/screenshots/     Images used in this README
 .github/              CodeQL, integrity check, Dependabot
 ```
 
