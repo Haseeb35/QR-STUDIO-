@@ -1,0 +1,25 @@
+# Secrets and credentials: never commit these
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+credentials.*
+
+# Local tool and editor folders
+.claude/
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencies and build output (none are needed, but just in case)
+node_modules/
+dist/
+*.log

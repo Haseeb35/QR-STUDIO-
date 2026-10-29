@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob: mediastream:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR Studio</title>
+  <meta name="description" content="Generate QR codes for URLs, text, Wi-Fi details, and contact information.">
+  <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111112" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preload" href="fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/prefs.js"></script>
+</head>
+<body>
+  <header class="topbar" id="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <svg class="brand-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 1h6v6H1zM9 1h6v6H9zM1 9h6v6H1zM9 9h3v3H9zM12 12h3v3h-3z"/></svg>
+        <span>QR Studio</span>
+      </a>
+      <nav class="nav" aria-label="Sections">
+        <a href="#generator">Create</a>
+        <a href="#check">Check a code</a>
+        <a href="#batch">Make many</a>
+        <a href="#faq">Help</a>
+      </nav>
+      <div class="topbar-actions">
+        <button class="btn small" id="installBtn" type="button" hidden>Install app</button>
+        <button class="icon-btn" id="motionToggle" type="button" aria-label="Animations" aria-pressed="true" title="Animations">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9zM18.5 15l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/><path class="slash" d="M4 4l16 16"/></svg>
+        </button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle color theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
+        </button>
+        <a class="icon-btn" href="https://github.com/Haseeb35/QR-STUDIO-" target="_blank" rel="noopener noreferrer" aria-label="Source on GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-copy reveal d0">
+      <p class="eyebrow"><span class="eyebrow-dot"></span>Free, no sign-up, nothing uploaded</p>
+      <h1>Make a QR code in under a minute.</h1>
+      <p class="lede">Choose what you want to share, like a website, your Wi-Fi or your contact details. Fill in a few boxes and download your code. We test every code to make sure phones can read it.</p>
+      <div class="hero-actions">
+        <a class="btn primary large" href="#generator">Create my QR code</a>
+        <a class="btn large" href="#how">How it works</a>
+      </div>
+      <dl class="hero-points">
+        <div><dt>Free</dt><dd>no account needed</dd></div>
+        <div><dt>Private</dt><dd>stays on your device</dd></div>
+        <div><dt>Forever</dt><dd>codes never expire</dd></div>
+      </dl>
+    </div>
+    <div class="hero-visual reveal d1" aria-hidden="true">
+      <div class="scene" id="heroScene"></div>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="howTitle">
+    <h2 id="howTitle" class="visually-hidden">How it works</h2>
+    <ol class="how-steps">
+      <li>
+        <span class="how-num">1</span>
+        <div><strong>Choose what to share</strong><span>A website, Wi-Fi password, contact card, location and more.</span></div>
+      </li>
+      <li>
+        <span class="how-num">2</span>
+        <div><strong>Fill in the details</strong><span>Your code updates as you type, and we check that phones can read it.</span></div>
+      </li>
+      <li>
+        <span class="how-num">3</span>
+        <div><strong>Download and use it</strong><span>Print it, put it on a poster or share the image. Test it with your phone camera first.</span></div>
+      </li>
+    </ol>
+  </section>
+
+  <main class="layout" id="generator">
+    <div class="stack">
+      <section class="panel editor reveal d2" aria-label="Create your QR code">
+        <h2 class="section-title"><span class="step">1</span>What do you want to share?</h2>
+        <div class="types" role="tablist" aria-label="What to share" id="typeTabs"></div>
+        <p class="type-about" id="typeAbout" aria-live="polite"></p>
+
+        <form id="form" autocomplete="off" novalidate>
+          <div class="details-step">
+            <h2 class="section-title"><span class="step">2</span>Add the details</h2>
+            <div id="typeFields"></div>
+          </div>
+
+          <div class="look-step">
+            <h2 class="section-title"><span class="step">3</span>Pick a look <span class="optional">optional</span></h2>
+            <div class="presets" id="presets" role="group" aria-label="Ready-made designs"></div>
+          </div>
+
+          <details class="customize">
+            <summary>
+              <span class="section-title">Customise it yourself</span>
+              <span class="summary-hint">Your own colours, shape, logo and a "Scan me" label</span>
+            </summary>
+            <div class="customize-body">
+          <fieldset class="fields">
+            <legend class="section-title">Shape</legend>
+            <div class="field full">
+              <span class="label">Pattern</span>
+              <div class="segmented" role="radiogroup" aria-label="Module style">
+                <label><input type="radio" name="dots" value="square" checked><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h5v5H2zM9 9h5v5H9zM9 2h5v5H9z"/></svg>Square</span></label>
+                <label><input type="radio" name="dots" value="rounded"><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1.8"/><rect x="9" y="9" width="5" height="5" rx="1.8"/><rect x="9" y="2" width="5" height="5" rx="1.8"/></svg>Rounded</span></label>
+                <label><input type="radio" name="dots" value="dots"><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4.5" cy="4.5" r="2.5"/><circle cx="11.5" cy="11.5" r="2.5"/><circle cx="11.5" cy="4.5" r="2.5"/></svg>Dots</span></label>
+              </div>
+            </div>
+            <div class="field full">
+              <span class="label">Corner squares</span>
+              <div class="segmented" role="radiogroup" aria-label="Corner style">
+                <label><input type="radio" name="corners" value="square" checked><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M1 1h14v14H1zM3.5 3.5v9h9v-9z"/><path d="M5.5 5.5h5v5h-5z"/></svg>Square</span></label>
+                <label><input type="radio" name="corners" value="rounded"><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M5 1h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4V5a4 4 0 0 1 4-4Zm.5 2.5a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2z"/><rect x="5.5" y="5.5" width="5" height="5" rx="1.5"/></svg>Rounded</span></label>
+                <label><input type="radio" name="corners" value="circle"><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1Zm0 2.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/><circle cx="8" cy="8" r="2.5"/></svg>Circle</span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fields">
+            <legend class="section-title">Colours</legend>
+            <p class="fields-note full">Keep the code dark and the background light so every phone can read it.</p>
+            <label class="field">
+              <span class="label">Code colour</span>
+              <span class="color-input">
+                <input name="fg" type="color" value="#111111">
+                <code data-for="fg">#111111</code>
+              </span>
+            </label>
+            <label class="field">
+              <span class="label">Background colour</span>
+              <span class="color-input">
+                <input name="bg" type="color" value="#ffffff">
+                <code data-for="bg">#FFFFFF</code>
+              </span>
+            </label>
+            <label class="field">
+              <span class="label">Two-colour fade</span>
+              <select name="gradient">
+                <option value="none">Off (one colour)</option>
+                <option value="vertical">Top to bottom</option>
+                <option value="horizontal">Left to right</option>
+                <option value="diagonal">Corner to corner</option>
+                <option value="radial">Centre outwards</option>
+              </select>
+            </label>
+            <label class="field" id="fg2Field" hidden>
+              <span class="label">Fade to</span>
+              <span class="color-input">
+                <input name="fg2" type="color" value="#2f5d50">
+                <code data-for="fg2">#2F5D50</code>
+              </span>
+            </label>
+          </fieldset>
+
+          <fieldset class="fields">
+            <legend class="section-title">Logo in the middle</legend>
+            <div class="field full">
+              <div class="upload" id="logoDrop">
+                <div class="upload-thumb" id="logoThumb" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v9.6l3.3-3.3a1 1 0 0 1 1.4 0l2.3 2.3 3.3-3.3a1 1 0 0 1 1.4 0L18 12.6V6H6Zm3.5 1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/></svg>
+                </div>
+                <div class="upload-text">
+                  <strong id="logoName">Add your logo</strong>
+                  <span id="logoHint">Drag an image here, or press Choose. Square logos look best.</span>
+                </div>
+                <div class="upload-actions">
+                  <label class="btn small">
+                    Choose
+                    <input id="logoInput" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp,image/gif" hidden>
+                  </label>
+                  <button class="btn small" type="button" id="logoRemove" hidden>Remove</button>
+                </div>
+              </div>
+            </div>
+            <label class="field full" id="logoSizeField" hidden>
+              <span class="label">Logo size <span class="hint" id="logoSizeValue">22%</span></span>
+              <input name="logoSize" type="range" min="0.14" max="0.3" step="0.02" value="0.22">
+            </label>
+          </fieldset>
+
+          <fieldset class="fields">
+            <legend class="section-title">Label</legend>
+            <p class="fields-note full">A short label like "Scan me" tells people what the code is for.</p>
+            <div class="field full">
+              <div class="segmented" role="radiogroup" aria-label="Frame style">
+                <label><input type="radio" name="frame" value="none" checked><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 1.6"/></svg>No label</span></label>
+                <label><input type="radio" name="frame" value="caption"><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="1" width="10" height="10" rx="1"/><rect x="4" y="13" width="8" height="1.6" rx=".8"/></svg>Text below</span></label>
+                <label><input type="radio" name="frame" value="box"><span><svg class="opt-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2Zm0 2v9h10V2z"/></svg>Framed</span></label>
+              </div>
+            </div>
+            <label class="field full" id="captionField" hidden>
+              <span class="label">Label text</span>
+              <input name="caption" type="text" maxlength="40" value="SCAN ME">
+            </label>
+          </fieldset>
+
+            </div>
+          </details>
+
+          <details class="customize">
+            <summary>
+              <span class="section-title">Advanced settings</span>
+              <span class="summary-hint">You can safely skip these</span>
+            </summary>
+            <div class="customize-body">
+          <fieldset class="fields">
+            <legend class="visually-hidden">Advanced settings</legend>
+            <label class="field full">
+              <span class="label">Damage tolerance <span class="hint" id="eccHint"></span></span>
+              <select name="ecc">
+                <option value="L">Low: smallest, simplest code</option>
+                <option value="M" selected>Medium: recommended for most uses</option>
+                <option value="Q">High: for codes that may get scratched or dirty</option>
+                <option value="H">Highest: best with a logo or outdoors</option>
+              </select>
+              <span class="field-help">How much of the code can be covered or damaged and still scan. Higher makes the pattern busier.</span>
+            </label>
+            <label class="field full">
+              <span class="label">White border <span class="hint" id="marginValue">4</span></span>
+              <input name="margin" type="range" min="0" max="8" step="1" value="4">
+              <span class="field-help">Phones need some empty space around the code. Keep at least 2 unless you add your own border.</span>
+            </label>
+          </fieldset>
+            </div>
+          </details>
+        </form>
+      </section>
+
+      <section class="panel side-panel reveal d3" id="batch" aria-labelledby="batchTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="batchTitle">Make many codes at once</h2>
+            <p class="muted">Got a list, like name badges or product labels? Download the template, fill it in with Excel or Google Sheets, save it as a CSV file and upload it here. You get one code per row, in the style you chose above (up to 500).</p>
+          </div>
+          <button class="btn small" type="button" id="batchTemplate">Get template</button>
+        </div>
+        <div class="batch-body">
+          <label class="btn" for="batchInput">Upload list (CSV)</label>
+          <input id="batchInput" type="file" accept=".csv,text/csv" hidden>
+          <span class="muted batch-status" id="batchStatus">No file loaded</span>
+        </div>
+        <div class="batch-actions">
+          <button class="btn primary" type="button" id="batchZip" disabled>Download all (ZIP)</button>
+          <button class="btn" type="button" id="batchPrint" disabled>Print all on sheets</button>
+        </div>
+      </section>
+
+      <section class="panel side-panel reveal d4" id="recent" aria-labelledby="historyTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="historyTitle">Your recent codes</h2>
+            <p class="muted">Codes you downloaded, shared or printed. Click one to open it again. They're saved only on this device, and Wi-Fi passwords are never saved.</p>
+          </div>
+          <button class="btn small" type="button" id="historyClear" hidden>Clear</button>
+        </div>
+        <ul class="history" id="historyList"></ul>
+        <p class="muted empty-history" id="historyEmpty">Nothing here yet. Codes you download will show up here.</p>
+      </section>
+    </div>
+
+    <aside class="panel preview reveal d3" aria-label="Preview">
+      <div class="preview-head">
+        <span class="live"><span class="live-dot"></span>Your QR code</span>
+        <span class="preview-tools">
+          <span class="chip" id="typeChip">Website</span>
+          <button class="icon-btn small" id="bigBtn" type="button" aria-label="Show full screen" title="Show full screen, to test it with your phone">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </span>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="card3d" id="card3d">
+          <div class="qr-wrap" id="qrWrap">
+            <div id="qr" class="qr" role="img" aria-label="QR code preview"></div>
+            <div class="beam" id="beam" aria-hidden="true"></div>
+            <div class="glare" aria-hidden="true"></div>
+          </div>
+          <p id="emptyState" class="empty" hidden>Fill in the details to create your code.</p>
+        </div>
+        <div class="stage-shadow" aria-hidden="true"></div>
+      </div>
+
+      <div class="scan-says" id="scanSays" hidden>
+        <span class="scan-says-label">When someone scans this, their phone will:</span>
+        <p id="scanSaysText"></p>
+      </div>
+
+      <div class="checks">
+        <div class="status" id="scanStatus" data-state="idle">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="scanText">Your code appears as soon as the details are filled in</span>
+        </div>
+        <ul class="warnings" id="warnings"></ul>
+      </div>
+
+      <div class="export">
+        <h2 class="section-title"><span class="step">4</span>Download</h2>
+        <label class="field">
+          <span class="label">Image size</span>
+          <select id="pngSize">
+            <option value="512">Small: for websites and chats</option>
+            <option value="1024" selected>Medium: recommended</option>
+            <option value="2048">Large: for posters and printing</option>
+          </select>
+        </label>
+        <div class="actions">
+          <button class="btn primary" id="downloadPng" type="button">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>
+            Download image
+          </button>
+          <button class="btn" id="copyPng" type="button" title="Copy the image so you can paste it into a document or chat">Copy</button>
+          <button class="btn" id="downloadSvg" type="button" title="Vector file that stays sharp at any size. Ask your printer or designer if they want this.">SVG</button>
+        </div>
+        <div class="actions secondary">
+          <button class="btn" id="shareLink" type="button" title="Get a link that opens this page with the same settings">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+            Share settings
+          </button>
+          <button class="btn" id="printOne" type="button">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg>
+            Print
+          </button>
+        </div>
+        <button class="btn wifi-sign-btn" id="wifiSignBtn" type="button" hidden>
+          <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a11 11 0 0 1 14 0M1.5 9a16 16 0 0 1 21 0M8.5 16a6 6 0 0 1 7 0M12 20h.01"/></svg>
+          Print a Wi-Fi sign for guests
+        </button>
+        <p class="export-tip">Before printing lots of copies, press <strong>Show full screen</strong> (the corners icon above the code) and try it with your phone camera.</p>
+      </div>
+
+      <details class="payload tech">
+        <summary>Technical details</summary>
+        <dl class="meta">
+          <div><dt>Type</dt><dd id="metaType">Website</dd></div>
+          <div><dt>Version</dt><dd id="metaVersion">—</dd></div>
+          <div><dt>Grid</dt><dd id="metaModules">—</dd></div>
+        </dl>
+        <p class="muted tech-note">This is the exact text stored inside the code:</p>
+        <pre id="payload"></pre>
+      </details>
+    </aside>
+  </main>
+
+  <section class="checker" id="check" aria-labelledby="checkTitle">
+    <div class="checker-head">
+      <h2 id="checkTitle">Found a QR code? Check it before you open it</h2>
+      <p class="muted">Some QR codes lead to scam websites. Upload a photo of the code or scan it with your camera, and we'll show you where it really goes, with a warning if anything looks suspicious. Nothing is opened unless you choose to.</p>
+    </div>
+    <div class="panel checker-panel">
+      <div class="checker-input">
+        <div class="drop" id="inspectDrop" tabindex="0" role="button" aria-label="Choose or drop an image of a QR code">
+          <video id="inspectVideo" playsinline muted hidden></video>
+          <div class="drop-idle" id="inspectIdle">
+            <svg class="drop-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg>
+            <strong>Drop a photo or screenshot of a QR code here</strong>
+            <span>or click to choose one. You can also paste with Ctrl+V.</span>
+          </div>
+        </div>
+        <div class="checker-actions">
+          <label class="btn">Choose image<input id="inspectInput" type="file" accept="image/*" hidden></label>
+          <button class="btn" id="cameraBtn" type="button">Use camera</button>
+        </div>
+      </div>
+
+      <div class="checker-result">
+        <p class="result-empty" id="resultEmpty">Your result appears here: what the code does, where it leads, and whether it looks safe.</p>
+        <div id="resultBody" hidden>
+          <div class="verdict" id="verdict" data-level="ok">
+            <span class="verdict-icon" aria-hidden="true"></span>
+            <div>
+              <strong id="verdictTitle"></strong>
+              <span id="verdictSub"></span>
+            </div>
+          </div>
+          <dl class="details" id="resultDetails"></dl>
+          <ul class="warnings" id="resultIssues"></ul>
+          <div class="result-actions">
+            <button class="btn" id="copyContent" type="button">Copy content</button>
+            <a class="btn primary" id="openLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Open link</a>
+          </div>
+          <details class="payload">
+            <summary>Raw content</summary>
+            <pre id="rawContent"></pre>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq" aria-labelledby="faqTitle">
+    <h2 id="faqTitle">Questions people ask</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Do these QR codes expire or stop working?</summary>
+        <p>No. Everything is stored inside the code itself, so it works forever. It doesn't depend on this website, and there's no subscription.</p>
+      </details>
+      <details>
+        <summary>Can I change a code after I've printed it?</summary>
+        <p>No. The content is part of the pattern, so new content means a new code. If you might change a link later, point the code to a page you control (like your website) and update that page instead.</p>
+      </details>
+      <details>
+        <summary>Is it really free and private?</summary>
+        <p>Yes. Your code is made right here in your browser. Nothing you type is sent to us or anyone else, and there's nothing to sign up for.</p>
+      </details>
+      <details>
+        <summary>How big should I print it?</summary>
+        <p>At least 2 × 2 cm (about 1 inch) for scanning up close. A simple rule: make it about one tenth of the scanning distance. So for a poster read from 2 metres away, print the code about 20 cm wide. Use the Large image size or SVG for printing.</p>
+      </details>
+      <details>
+        <summary>My code won't scan. What can I do?</summary>
+        <p>Use a dark code on a light background, keep the white border, and don't make the logo too big. The check under the preview tells you if something might be a problem. Also make sure the printed code isn't too small or shiny.</p>
+      </details>
+      <details>
+        <summary>How do people scan it?</summary>
+        <p>Most phones just need the camera app: point it at the code and tap the link or button that appears. Older phones may need a free QR scanner app.</p>
+      </details>
+      <details>
+        <summary>Which download should I pick?</summary>
+        <p>"Download image" (PNG) works everywhere: documents, websites, chats and most printing. SVG stays perfectly sharp at any size, which professional printers and designers prefer.</p>
+      </details>
+    </div>
+  </section>
+
+  <dialog class="big-view" id="bigDialog" aria-label="QR code, full screen">
+    <div class="big-inner">
+      <p class="big-title">Point your phone camera here</p>
+      <div class="big-code" id="bigCode"></div>
+      <p class="big-says" id="bigSays"></p>
+      <p class="big-close">Click anywhere or press Esc to close</p>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="signDialog" aria-labelledby="signTitleHeading">
+    <h2 id="signTitleHeading">Print a Wi-Fi sign</h2>
+    <p class="muted">A ready-to-print card with your QR code and network details, for a table, reception desk or fridge. Tip: in the print window you can choose "Save as PDF" to keep a copy.</p>
+    <label class="field">
+      <span class="label">Heading</span>
+      <input type="text" id="signTitle" maxlength="40" placeholder="Free Wi-Fi">
+    </label>
+    <label class="check" id="signPwRow">
+      <input type="checkbox" id="signShowPw" checked>
+      <span>Also print the password as text (for people without a camera)</span>
+    </label>
+    <div class="dialog-actions">
+      <button class="btn" type="button" id="signCancel">Cancel</button>
+      <button class="btn primary" type="button" id="signPrint">Print sign</button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="shareDialog" aria-labelledby="shareTitle">
+    <h2 id="shareTitle">Share link</h2>
+    <p class="muted">Your settings are stored inside the link after the # sign, which browsers never send to a server.</p>
+    <label class="check" id="sharePwRow" hidden>
+      <input type="checkbox" id="shareIncludePw">
+      <span>Include the Wi-Fi password</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="shareLock">
+      <span>Lock with a passphrase <span class="muted" id="shareLockHint"></span></span>
+    </label>
+    <label class="field" id="sharePassField" hidden>
+      <span class="label">Passphrase</span>
+      <input type="password" id="sharePass" autocomplete="new-password" minlength="8">
+      <span class="muted">At least 8 characters. Send it separately from the link, never in the same message.</span>
+    </label>
+    <p class="muted" id="shareNote"></p>
+    <p class="dialog-error" id="shareError" role="alert"></p>
+    <div class="dialog-actions">
+      <button class="btn" type="button" id="shareCancel">Cancel</button>
+      <button class="btn primary" type="button" id="shareCopy">Copy link</button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="unlockDialog" aria-labelledby="unlockTitle">
+    <h2 id="unlockTitle">This link is locked</h2>
+    <p class="muted">Enter the passphrase you were given to load these settings. It's checked on this device only.</p>
+    <label class="field">
+      <span class="label">Passphrase</span>
+      <input type="password" id="unlockPass" autocomplete="off">
+    </label>
+    <p class="dialog-error" id="unlockError" role="alert"></p>
+    <div class="dialog-actions">
+      <button class="btn" type="button" id="unlockCancel">Cancel</button>
+      <button class="btn primary" type="button" id="unlockBtn">Unlock</button>
+    </div>
+  </dialog>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="brand small">
+        <svg class="brand-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 1h6v6H1zM9 1h6v6H9zM1 9h6v6H1zM9 9h3v3H9zM12 12h3v3h-3z"/></svg>
+        QR Studio
+      </span>
+      <span>Built with vanilla JavaScript. No tracking, no uploads.</span>
+      <a href="https://github.com/Haseeb35/QR-STUDIO-" target="_blank" rel="noopener noreferrer">Source on GitHub</a>
+    </div>
+  </footer>
+
+  <div id="printArea" class="print-area" aria-hidden="true"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="vendor/qrcode.min.js"></script>
+  <script src="vendor/jsQR.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="js/payloads.js"></script>
+  <script src="js/security.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/batch.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/motion.js"></script>
+  <script src="js/inspect.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

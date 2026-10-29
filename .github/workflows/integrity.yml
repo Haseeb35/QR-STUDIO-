@@ -1,0 +1,30 @@
+name: Integrity
+
+# Fails if any bundled library or font differs from the recorded SHA-256 hash,
+# or if a page starts loading scripts, styles or fonts from another origin.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify vendored file hashes
+        run: sha256sum --check --strict SHA256SUMS
+
+      - name: Ensure no third-party scripts, styles or fonts
+        run: |
+          if grep -nE '<(script|link)[^>]+(src|href)="(https?:)?//' index.html | grep -vE 'rel="(manifest|icon|apple-touch-icon)"'; then
+            echo "index.html references an external script or stylesheet." >&2
+            exit 1
+          fi
+
+      - name: Ensure the Content Security Policy is present
+        run: grep -q 'http-equiv="Content-Security-Policy"' index.html
